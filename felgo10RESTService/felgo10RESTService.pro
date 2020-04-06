@@ -1,3 +1,5 @@
+#Reference Source: https://felgo.com/doc/apps-howto-access-rest-service/
+
 # allows to add DEPLOYMENTFOLDERS and links to the Felgo library and QtCreator auto-completion
 CONFIG += felgo
 
