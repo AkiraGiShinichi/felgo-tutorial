@@ -1,5 +1,8 @@
 import Felgo 3.0
 import QtQuick 2.0
+import "pages"
+import "model"
+import "logic"
 
 App {
     // You get free licenseKeys from https://felgo.com/licenseKey
@@ -9,16 +12,55 @@ App {
     //  * Add plugins to monetize, analyze & improve your apps (available with the Pro Licenses)
     //licenseKey: "<generate one from https://felgo.com/licenseKey>"
 
+    Component.onCompleted: {
+        if (isOnline) {
+            logic.clearCache()
+        }
+
+        logic.fetchTodos()
+        logic.fetchDraftTodos()
+    }
+
+    Logic {
+        id: logic
+    }
+
+    // Model
+    DataModel {
+        id: dataModel
+        dispatcher: logic
+
+        onFetchTodosFailed: nativeUtils.displayMessageBox("Unable to load todos", error, 1)
+        onFetchTodoDetailsFailed: NativeUtils.displayMessageBox("Unable to load photo" + id, error, 1)
+        onStoreTodoFailed: NativeUtils.displayMessageBox("Failed to store" + viewHelper.formatTitle(todo))
+    }
+
+    ViewHelper {
+        id: viewHelper
+    }
+
     NavigationStack {
+        id: navigation
+        enabled: dataModel.userLoggedIn
 
-        Page {
-            title: qsTr("Main Page")
+        NavigationItem {
+            title: qsTr("Todo List")
+            icon: IconType.list
 
-            Image {
-                source: "../assets/felgo-logo.png"
-                anchors.centerIn: parent
+            NavigationStack {
+                splitView: tablet
+                initialPage: TodoListPage{}
             }
         }
 
+    }
+
+    LoginPage {
+        visible: opacity > 0
+        enabled: visible
+        opacity: dataModel.userLoggedIn ? 0 : 1
+        Behavior on opacity {
+            NumberAnimation { duration: 250 }
+        }
     }
 }

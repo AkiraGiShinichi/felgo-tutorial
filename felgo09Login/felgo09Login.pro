@@ -58,3 +58,13 @@ win32 {
 macx {
     ICON = macx/app_icon.icns
 }
+
+DISTFILES += \
+    qml/logic/Logic.qml \
+    qml/logic/ViewHelper.qml \
+    qml/model/DataModel.qml \
+    qml/model/RestAPI.qml \
+    qml/model/code-admob.png \
+    qml/model/logo-admob.png \
+    qml/pages/LoginPage.qml \
+    qml/pages/TodoListPage.qml
